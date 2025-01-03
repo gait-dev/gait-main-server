@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Django",
+            "type": "shell",
+            "command": "python manage.py runserver",
+            "windows": {
+                "command": "python manage.py runserver"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            }
+        },
+
+        {
+            "label": "React",
+            "type": "shell",
+            "command": "npm run dev",
+            "windows": {
+                "command": "npm run dev"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            }
+        }
+    ]
+}

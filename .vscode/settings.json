@@ -1,0 +1,14 @@
+{
+    "python.terminal.activateEnvironment": true,
+    "window.zoomLevel": 0,
+    "editor.minimap.enabled": false,
+    "editor.renderWhitespace": "trailing",
+    "editor.linkedEditing": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "files.autoSave": "onFocusChange",
+    "workbench.tree.indent": 15,
+    "workbench.tree.renderIndentGuides": "always",
+    "git.confirmSync": true,
+    
+}
