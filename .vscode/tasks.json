@@ -14,13 +14,13 @@
                 "panel": "new"
             },
             "runOptions": {
-                "runOn": "folderOpen",
+                "runOn": "folderOpen"
             },
             "options": {
                 "cwd": "${workspaceFolder}/backend"
-            }
+            },
+            "problemMatcher": []
         },
-
         {
             "label": "React",
             "type": "shell",
@@ -34,7 +34,7 @@
                 "panel": "new"
             },
             "runOptions": {
-                "runOn": "folderOpen",
+                "runOn": "folderOpen"
             },
             "options": {
                 "cwd": "${workspaceFolder}/frontend"
