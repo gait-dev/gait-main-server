@@ -1,23 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import {format, parse, startOfWeek, getDay} from 'date-fns';
-import { fr,enUS } from 'date-fns/locale';
 import axiosInstance from '../../utils/axiosConfig';
 import AppointmentForm from './AppointmentForm';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-const locales = {
-  'en-US': enUS,
-  'fr-FR': fr, // Utilisez 'fr' pour les dates en français
-};
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
 
 // Type pour les rendez-vous
 interface Appointment {
@@ -74,25 +58,7 @@ const AppointmentList: React.FC = () => {
   return (
     <div>
       <h1>Calendrier des rendez-vous</h1>
-      <Calendar
-        localizer={localizer}
-        events={appointments}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500 }}
-        selectable
-        onSelectSlot={handleSelectSlot} // Gestion des clics sur les créneaux
-        onSelectEvent={(event) => alert(`Rendez-vous : ${event.description}`)} // Afficher les détails d'un rendez-vous
-        messages={{
-          today: 'Aujourd\'hui',
-          previous: 'Précédent',
-          next: 'Suivant',
-          month: 'Mois',
-          week: 'Semaine',
-          day: 'Jour',
-          agenda: 'Agenda',
-        }}
-      />
+      
 
       {/* Formulaire d'ajout de rendez-vous */}
       {showForm && selectedSlot && (
