@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import { removeTokens } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  centralComponent: React.ReactNode; // Composant à afficher au centre
+}
+
+const Header: React.FC<HeaderProps> = ({ centralComponent }) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     removeTokens(); // Supprime les tokens d'authentification
@@ -19,34 +23,9 @@ const Header: React.FC = () => {
         </div>
 
         {/* Navigation */}
-        <nav>
-          <ul className="flex space-x-6">
-            <li>
-              <Link
-                to="/appointments"
-                className="hover:underline hover:text-gray-300"
-              >
-                Calendrier
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/appointments/new"
-                className="hover:underline hover:text-gray-300"
-              >
-                Ajouter un rendez-vous
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/patients"
-                className="hover:underline hover:text-gray-300"
-              >
-                Patients
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <div>
+          {centralComponent}
+        </div>
 
         {/* Bouton de déconnexion */}
         <button
