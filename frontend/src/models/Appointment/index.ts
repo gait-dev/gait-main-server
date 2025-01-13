@@ -1,2 +1,2 @@
-export { default as AppointmentList } from './AppointmentList';
+export { default as Calendar } from './Calendar';
 export { default as AppointmentForm } from './AppointmentForm';

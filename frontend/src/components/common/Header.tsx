@@ -16,14 +16,14 @@ const Header: React.FC<HeaderProps> = ({ centralComponent }) => {
 
   return (
     <header className="bg-sky-400 text-white">
-      <div className="w-full px-4 py-4 flex justify-between items-center">
+      <div className="w-full px-4 py-2 flex justify-between items-center gap-4">
         {/* Logo */}
         <div className="text-2xl font-bold">
           <Link to="/">Gait</Link>
         </div>
 
         {/* Navigation */}
-        <div>
+        <div className='w-full'>
           {centralComponent}
         </div>
 

@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './index.css';
-import Header from './components/common/Header';
 import RouteLayout from './components/common/RouteLayout';
 import { PatientList, PatientDetail, PatientForm } from './models/Patient';
-import { AppointmentList, AppointmentForm } from './models/Appointment';
+import { Calendar, AppointmentForm } from './models/Appointment';
 import LoginView from './components/LoginView';
+import CalendarHeader from './models/Appointment/CalendarHeader';
+
+import './index.css';
 
 function App() {
   return (
@@ -17,9 +18,9 @@ function App() {
         <Route
           path="/appointments"
           element={
-            <RouteLayout centralComponent={<h1 className="text-xl font-bold">Calendrier des rendez-vous</h1>} />
+            <RouteLayout centralComponent={<CalendarHeader/>} />
           }>
-          <Route index element={<AppointmentList />} />
+          <Route index element={<Calendar />} />
 
         </Route>
         <Route
