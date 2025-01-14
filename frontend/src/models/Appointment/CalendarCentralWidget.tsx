@@ -1,27 +1,47 @@
-import React from 'react';
-import CalendarDayGrid from './CalendarDayGrid';
-import dayjs from 'dayjs';
-
+import React from "react";
+import CalendarDayGrid from "./CalendarDayGrid";
+import dayjs from "dayjs";
 
 interface CalendarCentralWidgetProps {
-    month: Array<Array<dayjs.Dayjs>>
-  }
-  
-  const CalendarCentralWidget: React.FC<CalendarCentralWidgetProps> = ( {month}) => {
+  monthGrid: Array<Array<dayjs.Dayjs>>;
+  selectedMonth: dayjs.Dayjs;
+}
 
-  
-    return (
-      <div className='flex-1 grid grid-cols-7 grid-rows-5'>
-        {month.map((row, index) => (
-            <React.Fragment key={index}>
-                {row.map((day,col_index) =>(
-                    <CalendarDayGrid day={day} key={col_index} rowIndex={index}/>
-                ))}
-            </React.Fragment >
+const CalendarCentralWidget: React.FC<CalendarCentralWidgetProps> = ({
+  monthGrid,
+  selectedMonth,
+}) => {
+  return (
+    <div className="flex flex-1 flex-col">
+      <div className="grid grid-cols-7">
+        {monthGrid.map((row, index) => (
+          <React.Fragment key={index}>
+            {row.map(
+              (day) =>
+                index == 0 && (
+                  <p className="text-gray-600 text-sm text-center mt-1 py-1">
+                    {day.format("ddd")}
+                  </p>
+                )
+            )}
+          </React.Fragment>
         ))}
       </div>
-    );
-  };
-  
+      <div className="flex-1 grid grid-cols-7 grid-rows-5">
+        {monthGrid.map((row, index) => (
+          <React.Fragment key={index}>
+            {row.map((day, col_index) => (
+              <CalendarDayGrid
+                day={day}
+                selectedMonth={selectedMonth}
+                key={col_index}
+              />
+            ))}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default CalendarCentralWidget;

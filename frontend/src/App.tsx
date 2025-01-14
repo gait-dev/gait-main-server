@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RouteLayout from './components/common/RouteLayout';
 import { PatientList, PatientDetail, PatientForm } from './models/Patient';
-import { Calendar, AppointmentForm } from './models/Appointment';
+import { Calendar, AppointmentForm , CalendarLayout} from './models/Appointment';
 import LoginView from './components/LoginView';
 import CalendarHeader from './models/Appointment/CalendarHeader';
 
@@ -18,11 +18,11 @@ function App() {
         <Route
           path="/appointments"
           element={
-            <RouteLayout centralComponent={<CalendarHeader/>} />
+            <CalendarLayout/>
           }>
           <Route index element={<Calendar />} />
-
         </Route>
+
         <Route
           path="/appointments/new"
           element={
@@ -31,25 +31,29 @@ function App() {
           <Route index element={<AppointmentForm />} />
         </Route>
 
-
         {/*Routes pour les patients */}
         <Route path="/patients" element={
-          <RouteLayout centralComponent={< h1 className="text-xl font-bold">Patients</h1>} />
+          <RouteLayout centralComponent={<h1 className="text-xl font-bold">Patients</h1>} />
         }>
           <Route index element={<PatientList />} />
         </Route>
 
         <Route path="/patients/:id" element={
-          <RouteLayout centralComponent={< h1 className="text-xl font-bold">Patient details</h1>} />
+          <RouteLayout centralComponent={<h1 className="text-xl font-bold">Patient details</h1>} />
         }>
           <Route index element={<PatientDetail patientId={1} />} />
         </Route>
 
         <Route path="/patients/new" element={
-          <RouteLayout centralComponent={< h1 className="text-xl font-bold">Patient Form</h1>} />
+          <RouteLayout centralComponent={<h1 className="text-xl font-bold">Patient Form</h1>} />
         }>
           <Route index element={<PatientForm />} />
         </Route>
+
+        <Route
+          path="*"
+          element={<h1 className="text-center text-red-500">Page non trouvée</h1>}
+        />
 
       </Routes>
     </Router >
