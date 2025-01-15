@@ -4,14 +4,17 @@ import dayjs from "dayjs";
 interface CalendarCentralWidgetProps {
   day: dayjs.Dayjs;
   selectedMonth: dayjs.Dayjs;
+  onChangeSelection: (day: dayjs.Dayjs) => void;
+  onAddAppointment: () => void;
 }
 
 const CalendarDayGrid: React.FC<CalendarCentralWidgetProps> = ({
   day,
   selectedMonth,
+  onChangeSelection,
+  onAddAppointment,
 }) => {
   const currentFormatted = dayjs().format("DD-MM-YY");
-  const currentMonth = dayjs().month();
 
   function getCurrentDaySelectionStyle() {
     let formatted = day.format("DD-MM-YY");
@@ -31,6 +34,10 @@ const CalendarDayGrid: React.FC<CalendarCentralWidgetProps> = ({
   return (
     <div
       className={`border border-gray-200 flex flex-col ${getCurrentDayGridStyle()}`}
+      onClick={() => {
+        onChangeSelection(day);
+        onAddAppointment();
+      }}
     >
       <header className="">
         <p className={`p-1 ${getCurrentDaySelectionStyle()}`}>

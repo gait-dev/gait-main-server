@@ -16,6 +16,10 @@ const CalendarLayout: React.FC<CalendarLayoutProps> = () => {
 
   const goToToday = () => setSelectedMonth(dayjs());
 
+  function onSmallCalendarChange(day: dayjs.Dayjs) {
+    setSelectedMonth(day);
+  }
+
   return (
     <div className="h-screen flex flex-col">
       {/* Header avec le composant central */}
@@ -32,7 +36,7 @@ const CalendarLayout: React.FC<CalendarLayoutProps> = () => {
 
       {/* Contenu principal */}
       <main className="flex flex-1 bg-gray-100">
-        <Outlet context={{ selectedMonth }} />
+        <Outlet context={{ selectedMonth, onSmallCalendarChange }} />
       </main>
     </div>
   );

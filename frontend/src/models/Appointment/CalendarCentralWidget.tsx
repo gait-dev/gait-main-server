@@ -5,11 +5,15 @@ import dayjs from "dayjs";
 interface CalendarCentralWidgetProps {
   monthGrid: Array<Array<dayjs.Dayjs>>;
   selectedMonth: dayjs.Dayjs;
+  onChangeSelection: (day: dayjs.Dayjs) => void;
+  onAddAppointment: () => void;
 }
 
 const CalendarCentralWidget: React.FC<CalendarCentralWidgetProps> = ({
   monthGrid,
   selectedMonth,
+  onChangeSelection,
+  onAddAppointment,
 }) => {
   return (
     <div className="flex flex-1 flex-col">
@@ -35,6 +39,8 @@ const CalendarCentralWidget: React.FC<CalendarCentralWidgetProps> = ({
                 day={day}
                 selectedMonth={selectedMonth}
                 key={col_index}
+                onChangeSelection={onChangeSelection}
+                onAddAppointment={onAddAppointment}
               />
             ))}
           </React.Fragment>
