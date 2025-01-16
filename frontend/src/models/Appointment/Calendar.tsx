@@ -27,6 +27,7 @@ const Calendar: React.FC = () => {
   }
 
   function onCloseAppointment() {
+    console.log("close");
     setEventShowModal(false);
   }
 

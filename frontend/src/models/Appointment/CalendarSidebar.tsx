@@ -1,6 +1,6 @@
 import React from "react";
 import { Add } from "@mui/icons-material";
-import SmallCalendar from "./SmallCalendar";
+import SmallCalendar from "../../components/Date/SmallCalendar";
 import dayjs from "dayjs";
 
 interface CalendarSidebarProps {
@@ -17,9 +17,9 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
   return (
     <aside className="border p-5 w-64 flex flex-col gap-2">
       <SmallCalendar
-        selectedMonth={selectedMonth}
+        value={selectedMonth}
         onChangeSelection={onChangeSelection}
-        onAddAppointment={onAddAppointment}
+        weekendHighlight={true}
       />
       <button
         className="bg-rose-500 hover:bg-rose-600 text-slate-100 px-4 py-2 rounded w-full"

@@ -4,21 +4,21 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { getMonth } from "../../utils/calendar";
 
 interface SmallCalendarProps {
-  selectedMonth: dayjs.Dayjs;
+  value: dayjs.Dayjs;
   onChangeSelection: (day: dayjs.Dayjs) => void;
-  onAddAppointment: () => void;
+  weekendHighlight?: boolean;
 }
 
 const SmallCalendar: React.FC<SmallCalendarProps> = ({
-  selectedMonth,
+  value,
   onChangeSelection,
-  onAddAppointment,
+  weekendHighlight,
 }) => {
   const currentFormatted = dayjs().format("DD-MM-YY");
 
   function getCurrentDaySelectionStyle(day: dayjs.Dayjs) {
     let formatted = day.format("DD-MM-YY");
-    let selectionFormatted = selectedMonth.format("DD-MM-YY");
+    let selectionFormatted = value.format("DD-MM-YY");
     return formatted === currentFormatted
       ? "bg-sky-400 hover:bg-sky-400 text-white"
       : selectionFormatted === formatted
@@ -28,7 +28,7 @@ const SmallCalendar: React.FC<SmallCalendarProps> = ({
 
   function getCurrentDayGridStyle(day: dayjs.Dayjs) {
     return day.month() === selectedSmallCalendarMonth.month()
-      ? day.day() === 0 || day.day() === 6
+      ? weekendHighlight && (day.day() === 0 || day.day() === 6)
         ? "text-sky-400"
         : "text-gray-700 "
       : "text-gray-400";
@@ -45,8 +45,8 @@ const SmallCalendar: React.FC<SmallCalendarProps> = ({
     setSelectedSmallCalendarMonth((prev) => prev.subtract(1, "month"));
 
   useEffect(() => {
-    setSelectedSmallCalendarMonth(selectedMonth);
-  }, [selectedMonth]);
+    setSelectedSmallCalendarMonth(value);
+  }, [value]);
 
   useEffect(() => {
     setSelectedMonthGrid(getMonth(selectedSmallCalendarMonth));
@@ -56,18 +56,20 @@ const SmallCalendar: React.FC<SmallCalendarProps> = ({
     <div className="py-2">
       <header className="flex justify-between">
         <button
-          className="hover:bg-gray-300 rounded-full py-2 px-3"
+          type="button"
+          className="text-gray-400 hover:text-sky-300 rounded-full py-2 pr-3"
           onClick={goToPreviousMonth}
         >
           <ChevronLeft></ChevronLeft>
         </button>
 
-        <p className="text-gray-500 font-bold py-2">
+        <p className="text-sm text-gray-500 font-bold py-3">
           {selectedSmallCalendarMonth.format("MMMM YYYY")}
         </p>
 
         <button
-          className="hover:bg-gray-300 rounded-full py-2 px-3"
+          type="button"
+          className="text-gray-400 hover:text-sky-300 rounded-full py-2 pl-3"
           onClick={goToNextMonth}
         >
           <ChevronRight></ChevronRight>
@@ -75,7 +77,10 @@ const SmallCalendar: React.FC<SmallCalendarProps> = ({
       </header>
       <div className="flex-1 grid grid-cols-7 grid-rows-6">
         {selectedMonthGrid[0].map((day, index) => (
-          <span key={index} className="text-sm text-center py-1">
+          <span
+            key={index}
+            className="text-xs justify-center text-gray-500 flex items-end"
+          >
             {day.format("ddd")}
           </span>
         ))}
@@ -84,12 +89,11 @@ const SmallCalendar: React.FC<SmallCalendarProps> = ({
             {row.map((day, idx) => (
               <button
                 key={idx}
-                className={`py-1 w-full hover:bg-gray-200 rounded-full ${getCurrentDaySelectionStyle(
+                className={`w-full min-w-10 hover:bg-gray-200 rounded-full aspect-square ${getCurrentDaySelectionStyle(
                   day
                 )}`}
                 onClick={() => {
                   onChangeSelection(day);
-                  onAddAppointment();
                 }}
               >
                 <span className={`text-sm ${getCurrentDayGridStyle(day)}`}>

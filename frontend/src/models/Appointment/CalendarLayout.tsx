@@ -17,6 +17,7 @@ const CalendarLayout: React.FC<CalendarLayoutProps> = () => {
   const goToToday = () => setSelectedMonth(dayjs());
 
   function onSmallCalendarChange(day: dayjs.Dayjs) {
+    console.log("Change day" + day);
     setSelectedMonth(day);
   }
 

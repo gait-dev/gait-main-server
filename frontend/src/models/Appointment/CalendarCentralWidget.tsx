@@ -21,9 +21,12 @@ const CalendarCentralWidget: React.FC<CalendarCentralWidgetProps> = ({
         {monthGrid.map((row, index) => (
           <React.Fragment key={index}>
             {row.map(
-              (day) =>
+              (day, row_index) =>
                 index == 0 && (
-                  <p className="text-gray-600 text-sm text-center mt-1 py-1">
+                  <p
+                    key={row_index}
+                    className="text-gray-600 text-sm text-center mt-1 py-1"
+                  >
                     {day.format("ddd")}
                   </p>
                 )
