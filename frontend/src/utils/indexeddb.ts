@@ -1,17 +1,13 @@
 import { openDB } from 'idb';
-import { Office, Patient, Appointment } from '../utils/types';
+import { dbElements } from '../utils/types';
 
 const dbPromise = openDB('gait-db', 1, {
   upgrade(db) {
-    if (!db.objectStoreNames.contains('offices')) {
-      db.createObjectStore('offices', { keyPath: 'id' });
-    }
-    if (!db.objectStoreNames.contains('patients')) {
-      db.createObjectStore('patients', { keyPath: 'id' });
-    }
-    if (!db.objectStoreNames.contains('appointments')) {
-      db.createObjectStore('appointments', { keyPath: 'id' });
-    }
+    dbElements.map((dbName) => {
+      if (!db.objectStoreNames.contains(dbName)) {
+        db.createObjectStore(dbName, { keyPath: 'id' });
+      }
+    })
   },
 });
 

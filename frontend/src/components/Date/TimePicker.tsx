@@ -7,7 +7,10 @@ interface TimePickerProps {
 }
 
 const TimePicker: React.FC<TimePickerProps> = ({ value }) => {
-  const [selectedTime, setSelectedTime] = useState(value);
+  const currentMinutes = value.get("minute");
+  const [selectedTime, setSelectedTime] = useState(
+    value.set("minute", currentMinutes - (currentMinutes % 5))
+  );
   const [step, setStep] = useState<"hour" | "minute">("hour");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timePickerRef = useRef<HTMLDivElement>(null);

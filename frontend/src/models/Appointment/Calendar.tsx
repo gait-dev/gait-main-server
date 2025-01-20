@@ -33,12 +33,12 @@ const Calendar: React.FC = () => {
 
   return (
     <div className="flex flex-1">
-      {showEventModal && (
-        <CalendarAddAppointment
-          daySelected={selectedMonth}
-          onClose={onCloseAppointment}
-        />
-      )}
+      <CalendarAddAppointment
+        daySelected={selectedMonth}
+        onClose={onCloseAppointment}
+        show={showEventModal}
+      />
+
       <CalendarSidebar
         selectedMonth={selectedMonth}
         onChangeSelection={onSmallCalendarChange}

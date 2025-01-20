@@ -17,3 +17,14 @@ export interface Appointment {
     patientId: number;
     description: string;
 }
+
+export const dbElements = [
+    'offices', 'appointments', 'patients'
+]
+
+
+export const dbTranslationFromUrl: {[url : string]: string;} = {
+    '/offices/' : 'offices',
+    '/appointments/' : 'appointments',
+    '/patients/' : 'patients',
+}
