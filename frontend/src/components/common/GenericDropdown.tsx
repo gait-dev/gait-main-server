@@ -93,7 +93,8 @@ const GenericDropdown = <T extends Record<string, any>>({
             placeholder={placeholder}
             onChange={(e) => handleSearch(e.target.value)}
             displayValue={(item: T) => {
-              return item[displayField];
+              if (item) return item[displayField];
+              return "";
             }}
             className="w-full border px-3 py-2 rounded shadow-sm text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
@@ -111,7 +112,7 @@ const GenericDropdown = <T extends Record<string, any>>({
             {loading && (
               <ComboboxOption
                 value={"loading"}
-                className="flex items-center justify-center py-4"
+                className="flex items-center justify-center py-4 px-2"
               >
                 <CircularProgress size={24} />
               </ComboboxOption>
@@ -120,7 +121,7 @@ const GenericDropdown = <T extends Record<string, any>>({
             {/* Add New Option */}
             {addNewModal && (
               <ComboboxOption
-                className=" text-sky-400 data-[focus]:bg-sky-400 data-[focus]:text-white data-[focus]:font-semibold  p-2"
+                className=" text-sky-400 data-[focus]:bg-sky-400 data-[focus]:text-white data-[focus]:font-semibold  px-4 py-2"
                 onClick={() => {
                   console.log("add new");
                   addNewModal();
@@ -137,7 +138,7 @@ const GenericDropdown = <T extends Record<string, any>>({
                 <ComboboxOption
                   key={item.id}
                   value={item}
-                  className="data-[focus]:bg-sky-400 data-[focus]:text-white data-[focus]:font-semibold p-2"
+                  className="data-[focus]:bg-sky-400 data-[focus]:text-white data-[focus]:font-semibold py-3 px-4"
                 >
                   {item[displayField]}
                 </ComboboxOption>

@@ -19,7 +19,6 @@ const Calendar: React.FC = () => {
 
   useEffect(() => {
     setCurrentMonthGrid(getMonth(selectedMonth));
-    console.log(selectedMonth);
   }, [selectedMonth]);
 
   function onAddAppointment() {
