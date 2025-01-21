@@ -7,6 +7,7 @@ export interface Office {
 export interface Patient {
     id: number;
     name: string;
+    phone: string;
     email: string;
     address: string;
 }

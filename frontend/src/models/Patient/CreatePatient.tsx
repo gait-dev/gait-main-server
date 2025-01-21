@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import GenericModal from "../../components/common/GenericModal";
 import { Patient } from "../../utils/types";
-import { Button, Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface CreatePatientModalProps {
   onClose: () => void;
@@ -13,95 +14,145 @@ const CreatePatientModal: React.FC<CreatePatientModalProps> = ({
   onPatientCreated,
   show,
 }) => {
-  const [patient, setPatient] = useState<Patient | undefined>(undefined);
-  const [email, setEmail] = useState("");
+  const onSubmit: SubmitHandler<Patient> = (newPatient) => {
+    console.log("Submit");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simuler l’ajout d’un patient (API ou local)
-    if (patient) onPatientCreated(patient); // Appelle la modal principale avec le nom du patient
+    onPatientCreated(newPatient); // Notifie le parent
+    onClose(); // Ferme la modal
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Patient>();
+
   return (
-    <>
-      <Dialog
-        open={show}
-        as="div"
-        className="relative z-10 focus:outline-none"
-        onClose={close}
-      >
-        <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center">
-          <DialogBackdrop className="fixed inset-0 bg-gray-600/40" />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <DialogPanel
-              transition
-              className="w-full bg-white rounded p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
-            >
-              <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3 px-5 py-5">
-                <div className="text-gray-600">
-                  <p className="font-medium text-lg">Add event</p>
-                  <p>Please fill out all the fields.</p>
-                </div>
-                <div className="lg:col-span-2">
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-4">
-                    <div className="md:col-span-4">
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        className="block w-full border rounded py-2 px-3"
-                        value={patient?.name}
-                        required
-                      />
-                    </div>
+    <GenericModal
+      isOpen={show}
+      title="Add Patient"
+      description="Please fill out all the fields to add a new patient."
+      onClose={onClose}
+      onSubmit={handleSubmit(onSubmit)}
+      gridWidth={1}
+      submitLabel="Create"
+      cancelLabel="Cancel"
+    >
+      {/* Name Field */}
+      <div className="md:col-span-4">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Name
+        </label>
+        <input
+          autoComplete="off"
+          type="text"
+          id="name"
+          {...register("name", {
+            required: "Name is required",
+            maxLength: {
+              value: 150,
+              message: "Name must be at most 150 characters long",
+            },
+            pattern: {
+              value: /^[A-Za-z\s]+$/i,
+              message: "Name must contain only letters and spaces",
+            },
+          })}
+          className={`block w-full border rounded py-2 px-3 mt-1 text-sm ${
+            errors.name ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
+      </div>
 
-                    <div className="md:col-span-4">
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mt-4"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="block w-full border rounded py-2 px-3"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
+      {/* Phone Field */}
+      <div className="md:col-span-2">
+        <label
+          htmlFor="phone"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Phone
+        </label>
+        <input
+          autoComplete="off"
+          type="text"
+          id="phone"
+          {...register("phone", {
+            required: "Phone is required",
+            pattern: {
+              value: /^[0-9]{10}$/,
+              message: "Phone must be a valid 10-digit number",
+            },
+          })}
+          className={`block w-full border rounded py-2 px-3 mt-1 text-sm ${
+            errors.phone ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.phone && (
+          <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+        )}
+      </div>
 
-                    <div className="md:col-span-4 text-right">
-                      <div className="inline-flex items-end gap-2">
-                        <Button
-                          className="bg-rose-500 hover:bg-rose-600 text-slate-100 px-4 py-2 rounded"
-                          onClick={() => onClose()}
-                        >
-                          Close
-                        </Button>
-                        <Button
-                          className="bg-sky-400 hover:bg-sky-600 text-slate-100 px-4 py-2 rounded"
-                          onClick={handleSubmit}
-                        >
-                          Submit
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </DialogPanel>
-          </div>
-        </div>
-      </Dialog>
-    </>
+      {/* Email Field */}
+      <div className="md:col-span-2">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Email
+        </label>
+        <input
+          autoComplete="off"
+          type="text"
+          id="email"
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i,
+              message: "Email must be a valid email address",
+            },
+          })}
+          className={`block w-full border rounded py-2 px-3 mt-1 text-sm ${
+            errors.email ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+        )}
+      </div>
+      {/* Address Field */}
+      <div className="md:col-span-4">
+        <label
+          htmlFor="address"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Address
+        </label>
+        <input
+          autoComplete="off"
+          type="text"
+          id="address"
+          {...register("address", {
+            required: "Address is required",
+            maxLength: {
+              value: 200,
+              message: "Address must be at most 200 characters long",
+            },
+          })}
+          className={`block w-full border rounded py-2 px-3 mt-1 text-sm ${
+            errors.address ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.address && (
+          <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
+        )}
+      </div>
+    </GenericModal>
   );
 };
 

@@ -43,6 +43,7 @@ const CalendarAddAppointment: React.FC<CalendarAddAppointmentContext> = ({
       isOpen={show}
       onClose={handleClose}
       onSubmit={handleSubmit}
+      gridWidth={3}
       title="Add Appointment"
       description="Fill out the form to schedule a new appointment."
       submitLabel="Save"

@@ -2,7 +2,7 @@ from django.db import models
 from podiatrist.models import Podiatrist
 
 class Patient(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=150)
     address = models.TextField()
     phone = models.CharField(max_length=15)
     email = models.EmailField()

@@ -3,7 +3,6 @@ import GenericDropdown from "../../components/common/GenericDropdown";
 import { fetchFromAPI } from "../../utils/api";
 import { Patient } from "../../utils/types";
 import CreatePatientModal from "./CreatePatient";
-import CreatePatient from "./CreatePatient";
 
 const fetchPatients = async (): Promise<Patient[]> => {
   let patients = await fetchFromAPI<Patient[]>("/patients/");
@@ -23,10 +22,10 @@ const PatientDropdown: React.FC = () => {
 
   const handleClose = () => {
     console.log("Closed");
+    setShowModal(false);
   };
 
   const onNewPatient = () => {
-    console.log("show modal");
     setShowModal(true);
   };
 

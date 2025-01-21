@@ -88,18 +88,18 @@ const GenericDropdown = <T extends Record<string, any>>({
       <Combobox onChange={handleSelection}>
         <div className="relative">
           {/* Input Field */}
-          <ComboboxInput
-            autoComplete="off"
-            placeholder={placeholder}
-            onChange={(e) => handleSearch(e.target.value)}
-            displayValue={(item: T) => {
-              if (item) return item[displayField];
-              return "";
-            }}
-            className="w-full border px-3 py-2 rounded shadow-sm text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
-            <ArrowDropDown className="text-gray-400"></ArrowDropDown>
+          <ComboboxButton className="w-full">
+            <ComboboxInput
+              autoComplete="off"
+              placeholder={placeholder}
+              onChange={(e) => handleSearch(e.target.value)}
+              displayValue={(item: T) => {
+                if (item) return item[displayField];
+                return "";
+              }}
+              className="w-full border px-3 py-2 rounded shadow-sm text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            <ArrowDropDown className="group absolute inset-y-2 right-2 text-gray-300"></ArrowDropDown>
           </ComboboxButton>
 
           {/* Dropdown Items */}

@@ -47,7 +47,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value }) => {
           type="text"
           readOnly
           value={selectedDate.format("DD/MM/YYYY")}
-          className="outline-none text-gray-400"
+          className="flex-1 outline-none text-gray-400"
           placeholder="Select a date"
         />
         <span className="text-gray-400 hover:text-sky-300">
