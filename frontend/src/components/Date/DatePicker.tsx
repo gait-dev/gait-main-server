@@ -5,16 +5,24 @@ import { CalendarToday } from "@mui/icons-material";
 
 interface DatePickerProps {
   value: dayjs.Dayjs;
+  error: boolean;
+  errorMessage: string;
+  onDateSelected: (date: dayjs.Dayjs) => void;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ value }) => {
+const DatePicker: React.FC<DatePickerProps> = ({
+  value,
+  error,
+  errorMessage,
+  onDateSelected,
+}) => {
   const [selectedDate, setSelectedDate] = useState(value);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const datePickerRef = useRef<HTMLDivElement>(null);
 
   const handleDateChange = (date: dayjs.Dayjs) => {
-    console.log("Date cahnge");
     setSelectedDate(date);
+    onDateSelected(date);
     setIsCalendarOpen(false); // Fermer le calendrier après la sélection
   };
 
@@ -40,7 +48,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ value }) => {
     <div className="relative">
       {/* Input Field */}
       <div
-        className="flex items-center border rounded px-3 py-2 bg-white shadow"
+        className={`flex items-center border rounded px-3 py-2 bg-white shadow ${
+          error ? "border-red-500" : "border-gray-300"
+        }`}
         onClick={toggleCalendar}
       >
         <input
@@ -54,6 +64,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value }) => {
           <CalendarToday />
         </span>
       </div>
+      {error && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
 
       {/* Calendar Dropdown */}
       {isCalendarOpen && (

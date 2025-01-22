@@ -1,24 +1,23 @@
 import axiosInstance from './axiosConfig';
 import { saveToIndexedDB } from './indexeddb';
-import { dbTranslationFromUrl } from './types';
+import { dbTranslationFromUrl, formatData, urlFromType } from './types';
 
 export async function fetchFromAPI<T>(url: string): Promise<T> {
   const response = await axiosInstance.get(url);
   const dbUrl = dbTranslationFromUrl[url];
 
-  if(dbUrl.includes(url)){
-    for (const item of response.data) {
-      await saveToIndexedDB(url, item);
-    }
+  for (const item of response.data) {
+    await saveToIndexedDB(dbUrl, item);
   }
+  
   return response.data;
 }
 
-export async function saveToAPI<T>(url: string, data: T): Promise<T> {
-  const response = await axiosInstance.post(url, data);
+export async function saveToAPI<T>(data: T): Promise<T> {
+  const response = await axiosInstance.post(urlFromType(data), formatData(data));
 
   for (const item of response.data) {
-    await saveToIndexedDB(url, item);
+    await saveToIndexedDB(urlFromType(data), item);
   }
   return response.data;
 }

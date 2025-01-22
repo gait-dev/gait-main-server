@@ -16,6 +16,7 @@ interface GenericDropdownProps<T> {
   displayField: keyof T;
   placeholder?: string; // Placeholder pour le champ de recherche
   addNewModal?: () => void; // Composant modal pour ajouter un nouvel élément
+  updateElement: T | undefined;
 }
 
 const GenericDropdown = <T extends Record<string, any>>({
@@ -25,6 +26,7 @@ const GenericDropdown = <T extends Record<string, any>>({
   placeholder = "Search...",
   displayField,
   addNewModal = undefined,
+  updateElement,
 }: GenericDropdownProps<T>) => {
   const [selectedItem, setSelectedItem] = useState<T>();
   const [items, setItems] = useState<T[]>([]);
@@ -32,6 +34,7 @@ const GenericDropdown = <T extends Record<string, any>>({
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAddNewModalOpen, setIsAddNewModalOpen] = useState(false);
+  const [displayValue, setDisplayValue] = useState("");
 
   // Type guard pour vérifier si la valeur est de type T
   const isInstanceOfT = (value: any): value is T => {
@@ -63,6 +66,14 @@ const GenericDropdown = <T extends Record<string, any>>({
     if (selectedItem) onSelect(selectedItem);
   }, [selectedItem]);
 
+  useEffect(() => {
+    if (updateElement) {
+      console.log("update element", updateElement);
+      setSelectedItem(updateElement);
+      setDisplayValue(updateElement[displayField]);
+    }
+  }, [updateElement]);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
 
@@ -90,6 +101,7 @@ const GenericDropdown = <T extends Record<string, any>>({
           {/* Input Field */}
           <ComboboxButton className="w-full">
             <ComboboxInput
+              value={displayValue}
               autoComplete="off"
               placeholder={placeholder}
               onChange={(e) => handleSearch(e.target.value)}

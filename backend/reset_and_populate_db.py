@@ -105,13 +105,15 @@ def populate_database():
     appointments_data = [
         {
             'patient': patients[0],
-            'date': datetime.now() + timedelta(days=1),
+            'start': datetime.now() + timedelta(days=1),
+            'end': datetime.now() + timedelta(days=1,minutes=30),
             'description': "Visite de contrôle",
             'type': "Contrôle"
         },
         {
             'patient': patients[1],
-            'date': datetime.now() + timedelta(days=2),
+            'start': datetime.now() + timedelta(days=2),
+            'end': datetime.now() + timedelta(days=2,minutes=30),
             'description': "Suivi après traitement",
             'type': "Suivi"
         }
@@ -121,7 +123,8 @@ def populate_database():
     for appointment_data in appointments_data:
         appointment, created = Appointment.objects.get_or_create(
             patient=appointment_data['patient'],
-            date=appointment_data['date'],
+            start=appointment_data['start'],
+            end=appointment_data['end'],
             defaults=appointment_data
         )
         appointments.append(appointment)

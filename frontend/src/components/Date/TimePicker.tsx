@@ -4,9 +4,17 @@ import React, { useState, useRef } from "react";
 
 interface TimePickerProps {
   value: dayjs.Dayjs;
+  error: boolean;
+  errorMessage: string;
+  onTimeSelected: (date: dayjs.Dayjs) => void;
 }
 
-const TimePicker: React.FC<TimePickerProps> = ({ value }) => {
+const TimePicker: React.FC<TimePickerProps> = ({
+  value,
+  error,
+  errorMessage,
+  onTimeSelected,
+}) => {
   const currentMinutes = value.get("minute");
   const [selectedTime, setSelectedTime] = useState(
     value.set("minute", currentMinutes - (currentMinutes % 5))
@@ -41,6 +49,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ value }) => {
 
   const handleMinuteClick = (minute: number) => {
     setSelectedTime(selectedTime.set("minute", minute));
+    onTimeSelected(selectedTime);
     setIsDropdownOpen(false); // Fermer le dropdown après la sélection
   };
 
@@ -52,7 +61,9 @@ const TimePicker: React.FC<TimePickerProps> = ({ value }) => {
     <div className="relative" ref={timePickerRef}>
       {/* Input Field */}
       <div
-        className="flex items-center border rounded px-3 py-2 "
+        className={`flex items-center border rounded px-3 py-2 ${
+          error ? "border-red-500" : "border-gray-300"
+        }`}
         onClick={toggleDropdown}
       >
         <input
@@ -66,6 +77,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ value }) => {
           <AccessTime></AccessTime>
         </span>
       </div>
+      {error && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
 
       {/* Dropdown */}
       {isDropdownOpen && (

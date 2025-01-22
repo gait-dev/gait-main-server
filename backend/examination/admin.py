@@ -3,7 +3,7 @@ from .models import Examination, ExaminationStep
 
 @admin.register(Examination)
 class ExaminationAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'date', 'description')
+    list_display = ('patient', 'start', 'description')
 
 @admin.register(ExaminationStep)
 class ExaminationStepAdmin(admin.ModelAdmin):

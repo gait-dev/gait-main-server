@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import GenericModal from "../../components/common/GenericModal";
 import { Patient } from "../../utils/types";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { saveToAPI } from "../../utils/api";
 
 interface CreatePatientModalProps {
   onClose: () => void;
@@ -14,9 +15,12 @@ const CreatePatientModal: React.FC<CreatePatientModalProps> = ({
   onPatientCreated,
   show,
 }) => {
-  const onSubmit: SubmitHandler<Patient> = (newPatient) => {
-    console.log("Submit");
-
+  const onSubmit: SubmitHandler<Patient> = async (newPatient) => {
+    try {
+      await saveToAPI(newPatient);
+    } catch {
+      console.log("Erreur to save index");
+    }
     onPatientCreated(newPatient); // Notifie le parent
     onClose(); // Ferme la modal
   };

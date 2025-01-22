@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
           const response = await axios.post('/token/refresh/', { refresh: refreshToken });
           const { access } = response.data;
 
-          setTokens(access, refreshToken); // Mettre à jour le token d'accès
+          setTokens("", access, refreshToken); // Mettre à jour le token d'accès
 
           // Réessayer la requête originale avec le nouveau token
           originalRequest.headers.Authorization = `Bearer ${access}`;

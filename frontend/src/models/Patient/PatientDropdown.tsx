@@ -6,18 +6,22 @@ import CreatePatientModal from "./CreatePatient";
 
 const fetchPatients = async (): Promise<Patient[]> => {
   let patients = await fetchFromAPI<Patient[]>("/patients/");
-
   return patients;
 };
 
-const PatientDropdown: React.FC = () => {
+interface PatientDropdownProps {
+  onPatientSelected: (patient: Patient) => void;
+}
+
+const PatientDropdown: React.FC<PatientDropdownProps> = ({
+  onPatientSelected,
+}) => {
   const [showModal, setShowModal] = useState(false);
+  const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const handlePatientSelect = (patient: Patient) => {
     console.log("Selected patient:", patient);
-  };
-
-  const handlePatientCreated = (patient: Patient) => {
-    console.log("Created patient:", patient);
+    setPatient(patient);
+    onPatientSelected(patient);
   };
 
   const handleClose = () => {
@@ -33,7 +37,7 @@ const PatientDropdown: React.FC = () => {
     <>
       {" "}
       <CreatePatientModal
-        onPatientCreated={handlePatientCreated}
+        onPatientCreated={setPatient}
         onClose={handleClose}
         show={showModal}
       />
@@ -44,6 +48,7 @@ const PatientDropdown: React.FC = () => {
         displayField="name"
         placeholder="Search for a patient..."
         addNewModal={onNewPatient}
+        updateElement={patient}
       />
     </>
   );

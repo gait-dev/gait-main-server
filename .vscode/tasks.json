@@ -28,7 +28,10 @@
             "windows": {
                 "command": "npm run dev"
             },
-            "group": "none",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+              },
             "presentation": {
                 "reveal": "always",
                 "panel": "new"

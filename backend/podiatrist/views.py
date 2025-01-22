@@ -34,6 +34,7 @@ class LoginView(APIView):
         # Génère les jetons JWT
         refresh = RefreshToken.for_user(user)
         return Response({
+            'user' : user.pk,
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })

@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../utils/axiosConfig';
-import { setTokens } from '../utils/auth';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosConfig";
+import { setTokens } from "../utils/auth";
 
 const LoginView: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post('login/', { username, password });
-      const { access, refresh } = response.data;
-      setTokens(access, refresh); // St
+      const response = await axiosInstance.post("login/", {
+        username,
+        password,
+      });
+      const { user, access, refresh } = response.data;
+      setTokens(user, access, refresh); // St
       // ocker les tokens
-      navigate('/appointments'); // Redirige vers la liste des patients
+      navigate("/appointments"); // Redirige vers la liste des patients
     } catch (err) {
-      setError('Identifiants invalides. Veuillez réessayer.');
+      setError("Identifiants invalides. Veuillez réessayer.");
     }
   };
 
@@ -42,7 +45,7 @@ const LoginView: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit">Se connecter</button>
       </form>
     </div>
