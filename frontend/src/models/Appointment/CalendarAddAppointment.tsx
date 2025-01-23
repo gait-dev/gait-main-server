@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import GenericModal from "../../components/common/GenericModal";
 import TimePicker from "../../components/Date/TimePicker";
 import DatePicker from "../../components/Date/DatePicker";
 import { PatientDropdown } from "../Patient";
 import dayjs from "dayjs";
-import { Appointment, Patient } from "../../utils/types";
+import { Appointment, AppointmentType, Patient } from "../../utils/types";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { saveToAPI } from "../../utils/api";
+import AppointmentTypeDropdown from "./AppointmentTypeDropdown";
 
 interface CalendarAddAppointmentContext {
   daySelected: dayjs.Dayjs;
@@ -18,66 +20,84 @@ const CalendarAddAppointment: React.FC<CalendarAddAppointmentContext> = ({
   show,
   onClose,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [patient, setPatient] = useState(-1);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(
-    undefined
-  );
-  const [startDate, setStartDate] = useState(daySelected);
-  const [endDate, setEndDate] = useState(daySelected.add(30, "minutes"));
-  const [description, setDescription] = useState("");
-
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<Appointment>();
+  } = useForm<Appointment>({
+    defaultValues: {
+      type: -1,
+      patient: -1,
+      start: daySelected.toISOString(),
+      end: daySelected.add(30, "minutes").toISOString(),
+      description: "",
+    },
+  });
 
-  const handleClose = () => {
-    onClose();
+  const selectedPatientId = watch("patient");
+  const selectedTypeId = watch("type");
+  const startDate = watch("start");
+  const endDate = watch("end");
+
+  const handleTypeSelect = (type: AppointmentType) => {
+    setValue("type", type.id); // Met à jour l'ID du patient
+  };
+  const handlePatientSelect = (patient: Patient) => {
+    setValue("patient", patient.id); // Met à jour l'ID du patient
   };
 
-  const startDateSelected = (date: dayjs.Dayjs) => {
-    startDate.set("year", date.year());
-    startDate.set("month", date.month());
-    startDate.set("day", date.day());
-    setStartDate(startDate);
+  const handleStartDateChange = (date: dayjs.Dayjs) => {
+    const updatedStart = dayjs(startDate)
+      .set("year", date.year())
+      .set("month", date.month())
+      .set("date", date.date());
+    setValue("start", updatedStart.toISOString());
   };
 
-  const startTimeSelected = (time: dayjs.Dayjs) => {
-    startDate.set("hour", time.hour());
-    startDate.set("minute", time.minute());
-    startDate.set("second", time.second());
-    setStartDate(startDate);
+  const handleStartTimeChange = (time: dayjs.Dayjs) => {
+    const updatedStart = dayjs(startDate)
+      .set("hour", time.hour())
+      .set("minute", time.minute());
+    setValue("start", updatedStart.toISOString());
   };
 
-  const endDateSelected = (date: dayjs.Dayjs) => {
-    endDate.set("year", date.year());
-    endDate.set("month", date.month());
-    endDate.set("day", date.day());
-    setEndDate(endDate);
+  const handleEndDateChange = (date: dayjs.Dayjs) => {
+    const updatedEnd = dayjs(endDate)
+      .set("year", date.year())
+      .set("month", date.month())
+      .set("date", date.date());
+    setValue("end", updatedEnd.toISOString());
   };
 
-  const endTimeSelected = (time: dayjs.Dayjs) => {
-    endDate.set("hour", time.hour());
-    endDate.set("minute", time.minute());
-    endDate.set("second", time.second());
-    setEndDate(endDate);
+  const handleEndTimeChange = (time: dayjs.Dayjs) => {
+    const updatedEnd = dayjs(endDate)
+      .set("hour", time.hour())
+      .set("minute", time.minute());
+    setValue("end", updatedEnd.toISOString());
   };
 
   const onSubmit: SubmitHandler<Appointment> = async (newAppointment) => {
     console.log("Submitted Appointment Data:", newAppointment);
-    handleClose();
+    try {
+      await saveToAPI(newAppointment);
+    } catch {
+      console.log("Erreur to save index");
+    }
+    onClose(); // Ferme la modal après soumission
   };
 
   useEffect(() => {
-    if (selectedPatient) setPatient(selectedPatient.id);
-  }, [selectedPatient]);
+    if (selectedPatientId === -1) {
+      console.warn("No patient selected!");
+    }
+  }, [selectedPatientId]);
 
   return (
     <GenericModal
       isOpen={show}
-      onClose={handleClose}
+      onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       gridWidth={3}
       title="Add Appointment"
@@ -85,143 +105,107 @@ const CalendarAddAppointment: React.FC<CalendarAddAppointmentContext> = ({
       submitLabel="Save"
       cancelLabel="Cancel"
     >
-      {/* Contenu principal */}
+      {/* Formulaire principal */}
       <>
-        {/* Patient Selection */}
+        {/* Sélection du patient */}
         <div className="md:col-span-2">
           <label className="block text-gray-700 text-sm font-bold">
             Patient
           </label>
+          <PatientDropdown onPatientSelected={handlePatientSelect} />
+          {errors.patient && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.patient.message}
+            </p>
+          )}
         </div>
+
+        {/* Sélection du type de rendez vous */}
         <div className="md:col-span-2">
           <label className="block text-gray-700 text-sm font-bold">
-            Rendez vous
+            Appointment
           </label>
+          <AppointmentTypeDropdown
+            onAppointmentTypeSelected={handleTypeSelect}
+          />
+          {errors.patient && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.patient.message}
+            </p>
+          )}
         </div>
-        <div
-          className={`md:col-span-2 ${
-            errors.patient ? "border rounded border-red-500" : ""
-          }`}
-        >
-          <PatientDropdown
-            onPatientSelected={setSelectedPatient}
-          ></PatientDropdown>
 
-          <input
-            value={patient}
-            className="hidden"
-            hidden={true}
-            autoComplete="off"
-            type="number"
-            {...register("patient", {
-              required: "Patient is required",
-            })}
-          ></input>
-        </div>
-        {errors.patient && (
-          <p className="text-red-500 text-sm mt-1">{errors.patient.message}</p>
-        )}
-        <div className="md:col-span-2">REndez vous</div>
-
+        {/* Date et heure de début */}
         <div className="md:col-span-4">
           <label className="block text-gray-700 text-sm font-bold">
-            Start date
+            Start date & time
           </label>
         </div>
-
         <div className="md:col-span-2">
           <DatePicker
-            value={daySelected}
-            error={errors.start != undefined}
+            value={dayjs(startDate)}
+            error={!!errors.start}
             errorMessage={
               errors.start && errors.start.message ? errors.start.message : ""
             }
-            onDateSelected={startDateSelected}
-          ></DatePicker>
+            onDateSelected={handleStartDateChange}
+          />
         </div>
-
         <div className="md:col-span-2">
           <TimePicker
-            value={daySelected}
-            error={errors.start != undefined}
+            value={dayjs(startDate)}
+            error={!!errors.start}
             errorMessage={
               errors.start && errors.start.message ? errors.start.message : ""
             }
-            onTimeSelected={startTimeSelected}
-          ></TimePicker>
+            onTimeSelected={handleStartTimeChange}
+          />
         </div>
 
-        <input
-          className="hidden"
-          hidden={true}
-          autoComplete="off"
-          type="text"
-          value={startDate.format("DD/MM/YYYYTHH:mm")}
-          id="start"
-          {...register("start", {
-            required: "Start date is required",
-            valueAsDate: true,
-          })}
-        ></input>
-
+        {/* Date et heure de fin */}
         <div className="md:col-span-4">
           <label className="block text-gray-700 text-sm font-bold">
-            End date
+            End date & time
           </label>
         </div>
-
         <div className="md:col-span-2">
           <DatePicker
-            value={daySelected}
-            error={errors.end != undefined}
+            value={dayjs(endDate)}
+            error={!!errors.end}
             errorMessage={
               errors.end && errors.end.message ? errors.end.message : ""
             }
-            onDateSelected={endDateSelected}
-          ></DatePicker>
+            onDateSelected={handleEndDateChange}
+          />
         </div>
-
         <div className="md:col-span-2">
           <TimePicker
-            value={daySelected.add(30, "minutes")}
-            error={errors.end != undefined}
+            value={dayjs(endDate)}
+            error={!!errors.end}
             errorMessage={
               errors.end && errors.end.message ? errors.end.message : ""
             }
-            onTimeSelected={endTimeSelected}
-          ></TimePicker>
+            onTimeSelected={handleEndTimeChange}
+          />
         </div>
 
-        <input
-          className="hidden"
-          hidden={true}
-          autoComplete="off"
-          type="text"
-          value={endDate.format("DD/MM/YYYYTHH:mm")}
-          id="end"
-          {...register("end", {
-            required: "End date is required",
-            valueAsDate: true,
-          })}
-        ></input>
-
+        {/* Description */}
         <div className="md:col-span-4">
           <label className="block text-gray-700 text-sm font-bold">
             Description
           </label>
           <textarea
-            rows={10}
+            rows={4}
             className="p-2.5 w-full text-sm text-gray-400 rounded-lg border"
             placeholder="Description"
             {...register("description")}
-          ></textarea>
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.description.message}
+            </p>
+          )}
         </div>
-
-        {errors.description && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.description.message}
-          </p>
-        )}
       </>
     </GenericModal>
   );

@@ -48,7 +48,7 @@ def populate_database():
     from podiatrist.models import Podiatrist
     from office.models import Office
     from patient.models import Patient
-    from appointment.models import Appointment
+    from appointment.models import Appointment, AppointmentType
     from examination.models import Examination, ExaminationStep
 
     # Créer un Cabinet (Office)
@@ -101,6 +101,19 @@ def populate_database():
         patients.append(patient)
     print(f"Patients : {patients}")
 
+
+      # Create Appointment Types
+    soin = AppointmentType.objects.create(
+        name="Soin",
+        description="Soin des pieds",
+        color="#FFC0CB"  # Rose pâle
+    )
+    semelles = AppointmentType.objects.create(
+        name="Semelles",
+        description="Consultation pour semelles",
+        color="#D8BFD8"  # Violet pâle
+    )
+
     # Créer des Rendez-vous (Appointments)
     appointments_data = [
         {
@@ -108,14 +121,14 @@ def populate_database():
             'start': datetime.now() + timedelta(days=1),
             'end': datetime.now() + timedelta(days=1,minutes=30),
             'description': "Visite de contrôle",
-            'type': "Contrôle"
+            'type': soin
         },
         {
             'patient': patients[1],
             'start': datetime.now() + timedelta(days=2),
             'end': datetime.now() + timedelta(days=2,minutes=30),
             'description': "Suivi après traitement",
-            'type': "Suivi"
+            'type': semelles
         }
     ]
 
